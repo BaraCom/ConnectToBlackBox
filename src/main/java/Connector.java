@@ -1,22 +1,22 @@
 import black_box.BlackBox;
 import java.util.concurrent.Callable;
+import static java.lang.Thread.currentThread;
 
-public class Connector {
-    private BlackBox blackBox;
-    private static int counter = 0;
+public class Connector implements Callable<String> {
 
-    public Callable runThread() {
-        Callable task = () -> {
-            blackBox = new BlackBox();
+    @Override
+    public String call() {
+        System.out.println(currentThread().getName() + " is starting...");
 
-            Long threadResult = blackBox.get();
-            System.out.println(threadResult + " millis. Complete.");
+        long startTime = System.currentTimeMillis();
+        new BlackBox().getBlackBoxResult();
+        long finishTime = System.currentTimeMillis();
 
-            return threadResult;
-        };
-        counter++;
-        System.out.println(counter);
+        System.out.println(currentThread().getName()
+                        + " is finished... Spent "
+                        + (finishTime - startTime)
+                        + " millis.");
 
-        return task;
+        return currentThread().getName();
     }
 }
